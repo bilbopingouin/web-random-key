@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8"/>
+		<title>Key generator</title>
+
+		<style rel="stylesheet" type="text/css">
+			#wrapper {
+				border: 2px solid aquamarine;
+				   -moz-border-radius: 15px;
+				-webkit-border-radius: 15px;
+				        border-radius: 15px;
+				width: 600px;
+				margin: auto;
+
+			}
+			#canvas {
+				border: 5px solid #422518;
+				   -moz-border-radius: 15px;
+				-webkit-border-radius: 15px;
+				        border-radius: 15px;
+				background-color: green;
+				display: block;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			#control {
+				/*background-color: blue;*/
+				color: blue;
+				height: 30px;
+			}
+			#control_wrapper {
+				margin-left: 100px;
+				margin-top: 5px;
+			}
+			#control div {
+			  float: left;
+			}
+			#control .text {
+			  margin-left: 10px;
+			  margin-right: 5px;
+			}
+			#control .text:after {
+			  content: ":";
+			}
+			#generate {
+			  margin-left: 10px;
+			}
+			#results p:first-child {
+			  margin-left: 10px;
+			}
+			#passbox {
+			  text-align: center;
+			  height: 20px;
+			}
+			#password {
+			  font-family: "Courier New";
+			  background-color: yellow;
+			}
+			#confusion {
+			  font-size: small;
+			  margin-left: 20px;
+			}
+			#confusion span {
+			  font-family: "Courier New";
+			}
+		</style>
+
+	</head>
+	<body>
+
+		<div id="background">
+			<div id="wrapper">
+				<div id="results">
+				    <p>Password:</p>
+				    <p id="passbox"><span id="password"></span></p>
+				</div>
+				<div id="control">
+				    <div id="control_wrapper">
+					<div id="size_password">
+						<div class="text">
+						Size
+						</div>
+						<div class="select">
+							<select id="spass">
+								<option value="6">6</option>
+								<option value="7">7</option>
+								<option value="8">8</option>
+								<option value="9">9</option>
+								<option selected="selected" value="10">10</option>
+								<option value="11">11</option>
+								<option value="12">12</option>
+								<option value="13">13</option>
+								<option value="14">14</option>
+								<option value="15">15</option>
+								<option value="16">16</option>
+								<option value="17">17</option>
+								<option value="18">18</option>
+								<option value="19">19</option>
+								<option value="20">20</option>
+								<option value="21">21</option>
+								<option value="22">22</option>
+								<option value="23">23</option>
+								<option value="24">24</option>
+								<option value="N">N</option>
+							</select>
+						</div>
+						<div style="display:none" id="DN">
+						  <div class="text">=</div>
+						  <input type="text" id="extra_type" name="xtype" size="5px">
+						</div>
+					</div>
+					<div id="characters_set">
+						<div class="text">
+						Sets
+						</div>
+						<div class="select">	
+							<select id="cset">
+								<option value="1">a-zA-Z</option>
+								<option value="2">a-zA-Z0-9</option>
+								<option value="3">a-zA-Z0-9+special characters</option>
+							</select>
+						</div>
+					</div>
+					<div id="generate"><a href="javascript:generate_password();">Generate</a></div>
+					<script type="text/javascript">
+						/* Display or not the extra field */
+						var type_select	  = document.getElementById("spass");
+						var customer_type  = document.getElementById("DN");
+						if ( "N" == type_select.value )
+						{
+						  customer_type.style.display = "inline";
+						}
+						type_select.addEventListener("change",function() {
+						  if ( "N" == type_select.value )
+						  { 
+						      customer_type.style.display = "inline";
+						  }
+						  else
+						  {
+						    customer_type.style.display = "none";
+						  }
+						});
+
+							var display = function (str) {
+						  var output = document.getElementById("password");
+						  output.textContent = str;
+						}
+						var do_generate = function (psize,pset) {
+							var sets = [
+							      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ",
+							      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+							      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .;,!?_-+*/\\&%()[]{}<>#'\"`",
+							      ];
+							var current_set = sets[pset-1];
+							//console.log("Set: "+current_set);
+							var pass = "";
+							for (var i=0 ; i<psize ; ++i)
+							{
+							  var index = Math.floor((Math.random() * current_set.length))
+							  pass += current_set[index];
+							}
+							//console.log("Pass: "+pass);
+							display(pass);
+						}
+
+						/* Reacting to the click */
+						var generate_password = function () {
+							var spass = document.getElementById("spass").value;
+							var cset = document.getElementById("cset").value;
+							var num_spass=0;
+
+							if ("N" == spass)
+							{
+							  var entered_dice_type = document.getElementById("extra_type").value;
+							  if (isNaN(entered_dice_type))
+							  {
+							    alert("Please enter a number!");
+							  }
+							  else
+							  {
+							    num_spass = Math.floor(Number(entered_dice_type));
+							    document.getElementById("extra_type").value = num_spass;  
+							  }
+							}
+							else
+							{
+							  num_spass = Number(spass);
+							}
+							//console.log(num_spass);
+							do_generate(num_spass,cset);
+						}
+					</script>
+				  </div>
+			    </div>
+			      <div id="confusion">
+				  <p>Note that to avoid confusion, those are typical mistaken characters: 
+				    <ul>
+				      <li><span>1</span>/<span>l</span> (number one/letter L),</li>
+				      <li><span>0</span>/<span>O</span>/<span>Q</span> (number zero/letter o/letter q)</li>
+				    </ul>
+				  </p>
+			      </div>
+			    <div id="foot"></div>
+			</div>
+		</div>
+	</body>
+</html>
